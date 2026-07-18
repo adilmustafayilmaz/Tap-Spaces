@@ -393,5 +393,10 @@ fetch("https://api.github.com/repos/adilmustafayilmaz/Tap-Spaces/releases/latest
     if (!v) return;
     document.getElementById("verBadge").textContent = v;
     document.getElementById("verFoot").textContent = v;
+    // Point the download button straight at the release's disk image, or the
+    // zip when a release carries no dmg. Falls back to the releases page.
+    const asset = rel.assets?.find((a) => a.name.endsWith(".dmg"))
+      || rel.assets?.find((a) => a.name.endsWith(".zip"));
+    if (asset) document.getElementById("dlBtn").href = asset.browser_download_url;
   })
   .catch(() => {});

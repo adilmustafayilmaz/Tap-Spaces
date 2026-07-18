@@ -50,12 +50,38 @@ xcrun stapler staple "${APP}"
 rm -f "${ZIP}"
 ditto -c -k --keepParent "${APP}" "${ZIP}"
 
+# The DMG is the direct-download artifact for the website: a drag-to-install
+# window with an Applications symlink. It gets its own signature and its own
+# notarisation — Gatekeeper checks the container as well as the app inside.
+DMG="${DIST}/${APP_NAME}-${VERSION}.dmg"
+echo "==> DMG hazırlanıyor"
+STAGE="$(mktemp -d)"
+cp -R "${APP}" "${STAGE}/"
+ln -s /Applications "${STAGE}/Applications"
+rm -f "${DMG}"
+hdiutil create -volname "Tap Spaces" -srcfolder "${STAGE}" \
+    -ov -format UDZO -quiet "${DMG}"
+rm -rf "${STAGE}"
+
+SIGN_IDENTITY=$(security find-identity -v -p codesigning \
+    | grep "Developer ID Application" \
+    | head -1 | sed -E 's/.*"(.*)"/\1/')
+codesign --force --sign "${SIGN_IDENTITY}" --timestamp "${DMG}"
+
+echo "==> DMG Apple'a gönderiliyor"
+xcrun notarytool submit "${DMG}" --keychain-profile "${PROFILE}" --wait
+xcrun stapler staple "${DMG}"
+
 echo "==> Doğrulanıyor"
 xcrun stapler validate "${APP}"
 spctl -a -vvv -t install "${APP}" 2>&1 | sed 's/^/    /'
+xcrun stapler validate "${DMG}"
 
 SHA=$(shasum -a 256 "${ZIP}" | awk '{print $1}')
+SHA_DMG=$(shasum -a 256 "${DMG}" | awk '{print $1}')
 echo
 echo "==> Hazır"
-echo "    dosya : ${ZIP}"
+echo "    zip   : ${ZIP}"
 echo "    sha256: ${SHA}"
+echo "    dmg   : ${DMG}"
+echo "    sha256: ${SHA_DMG}"
