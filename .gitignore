@@ -1,0 +1,21 @@
+# Swift
+native/.build/
+native/build/
+*.xcuserstate
+.swiftpm/
+
+# Generated icon artifacts — build.sh redraws these from icon/make-icon.swift
+native/icon/AppIcon.iconset/
+native/icon/AppIcon.icns
+
+# Python prototype
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local calibration data, not source
+model.json
+state.json
+
+# macOS
+.DS_Store
