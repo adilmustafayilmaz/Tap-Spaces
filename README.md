@@ -15,14 +15,28 @@ Menu bar only — no Dock icon, no app switcher entry.
 ## Install
 
 ```bash
-cd native
-./build.sh --install
+brew tap adilmustafayilmaz/tap
+brew trust adilmustafayilmaz/tap
+brew install --cask tap-spaces
 ```
 
-Then open `TapSpaces.app`. On first launch it walks you through both permissions
-and calibration.
+`brew trust` is required because Homebrew treats third-party taps as untrusted
+by default.
 
-Requires macOS 14+ and Xcode command line tools.
+Then open `TapSpaces.app`. On first launch it walks you through both permissions
+and calibration. Requires macOS 14 or later.
+
+The app is signed with a Developer ID certificate and notarised by Apple, so it
+opens without a Gatekeeper warning. It is **not** sandboxed — it posts synthetic
+key events to other applications, which no sandbox entitlement permits. That is
+also why it ships outside the Mac App Store.
+
+### Build from source
+
+```bash
+cd native
+./build.sh --install     # requires Xcode command line tools
+```
 
 ## How it works
 
