@@ -52,9 +52,14 @@ final class KNN: Codable {
 
     /// Swap in a whole training set (used when restoring from disk).
     /// Assigning `samples` directly would leave the fitted cache stale.
+    ///
+    /// The state file is plain JSON that a user — or any other process — can
+    /// edit, so nothing in it is trusted: a ragged feature vector would crash
+    /// `fit()` on an out-of-range index, and a non-positive `k` would trap in
+    /// `predict`'s `prefix`.
     func replaceSamples(_ new: [TrainingSample], k: Int) {
-        samples = new
-        self.k = k
+        samples = new.filter { $0.feats.count == Features.dimension }
+        self.k = min(max(k, 1), 25)
         dirty = true
     }
 

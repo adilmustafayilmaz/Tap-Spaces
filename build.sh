@@ -74,7 +74,7 @@ fi
 
 if [[ -n "${SIGN_IDENTITY}" ]]; then
     echo "==> İmzalanıyor: ${SIGN_IDENTITY}"
-    codesign --force --deep \
+    codesign --force \
         --sign "${SIGN_IDENTITY}" \
         --identifier "${BUNDLE_ID}" \
         --options runtime \

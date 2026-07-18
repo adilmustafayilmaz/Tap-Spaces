@@ -106,11 +106,18 @@ final class AppState: ObservableObject {
         model.replaceSamples(p.model.samples, k: p.model.k)
         var restored = [Zone: KeyAction]()
         for (key, action) in p.bindings {
-            if let z = Zone(rawValue: key) { restored[z] = action }
+            guard let z = Zone(rawValue: key) else { continue }
+            // Keep only the four modifier bits the recorder can produce; the
+            // state file is user-editable and stray flags would post malformed
+            // events through an Accessibility-trusted app.
+            let mods = action.flags.intersection([.command, .option, .control, .shift])
+            restored[z] = KeyAction(keyCode: action.keyCode, modifiers: mods.rawValue)
         }
         bindings = restored
-        sensitivity = p.sensitivity
-        minConfidence = p.minConfidence
+        // Clamp to the ranges the sliders offer, so an edited file cannot park
+        // the app in a state the UI can neither show nor recover from.
+        sensitivity = min(max(p.sensitivity, 0), 100)
+        minConfidence = min(max(p.minConfidence, 0.25), 0.95)
         actionsEnabled = p.actionsEnabled
         showToast = p.showToast ?? true
         // Anyone upgrading from a build that predates onboarding has already

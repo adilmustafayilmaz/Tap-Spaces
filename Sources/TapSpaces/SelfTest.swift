@@ -116,7 +116,14 @@ enum SelfTest {
         check("decoded model predicts", decoded.predict(reFeats) != nil,
               "\(decoded.predict(reFeats)?.zone.rawValue ?? "nil")")
 
-        // 5. Key action formatting and codability
+        // 5. Hostile state file: ragged feature vectors and a non-positive k
+        //    must be rejected on load rather than trapping later in fit/predict.
+        let hostile = KNN()
+        hostile.replaceSamples([TrainingSample(label: .topLeft, feats: [1, 2, 3])], k: -3)
+        check("hostile load rejected", hostile.samples.isEmpty && hostile.k >= 1,
+              "\(hostile.samples.count) kept, k=\(hostile.k)")
+
+        // 6. Key action formatting and codability
         let action = KeyAction(keyCode: 123, modifiers: 262144)   // ⌃←
         check("key display", action.display.contains("←"), action.display)
         let ka = try! JSONDecoder().decode(
