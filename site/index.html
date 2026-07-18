@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tap Spaces — your desk just became a keyboard</title>
+<meta name="description" content="Tap Spaces is a macOS menu bar app that hears where on the desk you knocked and fires the keyboard shortcut you bound to that spot. Offline, on-device, open source.">
+<meta property="og:title" content="Tap Spaces">
+<meta property="og:description" content="Knock on the desk, switch your desktop. Acoustic tap localisation for macOS.">
+<meta property="og:image" content="assets/icon.png">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <a class="brand" href="#top">
+    <img src="assets/icon.png" alt="" width="28" height="28">
+    <span>Tap Spaces</span>
+  </a>
+  <nav class="nav-links">
+    <a href="#how" data-i18n="nav.how">How it works</a>
+    <a href="#features" data-i18n="nav.features">Features</a>
+    <a href="#install" data-i18n="nav.install">Install</a>
+  </nav>
+  <div class="nav-actions">
+    <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+      <span data-lang-opt="en">EN</span><i>/</i><span data-lang-opt="tr">TR</span>
+    </button>
+    <a class="gh-link" href="https://github.com/adilmustafayilmaz/Tap-Spaces" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============================ hero ============================ -->
+  <section class="hero">
+    <p class="eyebrow" data-i18n="hero.eyebrow">macOS menu bar app · free &amp; open source</p>
+    <h1>
+      <span data-i18n="hero.line1">Your desk just</span><br>
+      <span class="grad" data-i18n="hero.line2">became a keyboard.</span>
+    </h1>
+    <p class="lede" data-i18n="hero.lede">
+      Tap Spaces listens for the sound of a knock, works out which corner of the
+      desk you hit, and fires the shortcut you bound to that spot. Everything
+      runs on-device — audio is never recorded or sent anywhere.
+    </p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#install" data-i18n="hero.get">Get it with Homebrew</a>
+      <a class="btn ghost" href="https://github.com/adilmustafayilmaz/Tap-Spaces/releases/latest">
+        <span data-i18n="hero.download">Download</span>&nbsp;<span class="ver" id="verBadge">0.2.1</span>
+      </a>
+    </div>
+
+    <!-- ======================= the desk ======================= -->
+    <figure class="desk-wrap">
+      <div class="desk" id="desk">
+        <div class="desk-zones">
+          <div class="dz" data-zone="TL"><span class="dz-name" data-i18n="zone.TL">Top left</span><kbd>⌃↑</kbd></div>
+          <div class="dz" data-zone="TR"><span class="dz-name" data-i18n="zone.TR">Top right</span><kbd>⌃↓</kbd></div>
+          <div class="dz" data-zone="BL"><span class="dz-name" data-i18n="zone.BL">Bottom left</span><kbd>⌃←</kbd></div>
+          <div class="dz" data-zone="BR"><span class="dz-name" data-i18n="zone.BR">Bottom right</span><kbd>⌃→</kbd></div>
+        </div>
+
+        <div class="macbook" aria-hidden="true">
+          <div class="mb-screen">
+            <span class="mb-meter"><i id="meter"></i></span>
+          </div>
+          <div class="mb-base"></div>
+        </div>
+
+        <div class="toast" id="toast" role="status">
+          <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M9.5 2a1.5 1.5 0 0 1 3 0v8h1V4.5a1.5 1.5 0 0 1 3 0V12h1V7.5a1.5 1.5 0 0 1 3 0v7c0 4.14-3.36 7.5-7.5 7.5S5.5 18.64 5.5 14.5v-3a1.5 1.5 0 0 1 3 0V13h1V2Z"/></svg>
+          <span id="toastZone">Bottom left</span>
+          <kbd id="toastKey">⌃←</kbd>
+        </div>
+
+        <p class="desk-hint" id="deskHint" data-i18n="desk.hint">Tap anywhere on the desk</p>
+
+        <button class="sound-toggle" id="soundToggle" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12Z"/></svg>
+          <span data-i18n="desk.sound">sound</span>
+        </button>
+      </div>
+      <figcaption class="desk-caption" data-i18n="desk.caption">
+        This is how it feels — on the real desk your knuckles do the clicking.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================ how ============================ -->
+  <section class="how" id="how">
+    <h2 class="reveal" data-i18n="how.title">One knock, three moves</h2>
+    <div class="steps">
+      <article class="step reveal">
+        <span class="step-n">1</span>
+        <h3 data-i18n="how.1.t">The mic hears the hit</h3>
+        <p data-i18n="how.1.d">A knock is a broadband transient. The detector high-passes the stream, catches the onset and freezes a 200&nbsp;ms window around it.</p>
+      </article>
+      <article class="step reveal">
+        <span class="step-n">2</span>
+        <h3 data-i18n="how.2.t">The spot is fingerprinted</h3>
+        <p data-i18n="how.2.d">Every point on your desk rings differently. 56 acoustic features — spectrum, decay, resonance — are matched against your calibration taps.</p>
+      </article>
+      <article class="step reveal">
+        <span class="step-n">3</span>
+        <h3 data-i18n="how.3.t">The shortcut fires</h3>
+        <p data-i18n="how.3.d">The zone's key combo is posted to whatever app is frontmost. Default bindings switch desktops and open Mission Control — rebind them to anything.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========================= features ========================= -->
+  <section class="features" id="features">
+    <h2 class="reveal" data-i18n="ft.title">Small app, sharp edges</h2>
+    <div class="ft-grid">
+      <article class="ft reveal">
+        <h3 data-i18n="ft.private.t">Private by design</h3>
+        <p data-i18n="ft.private.d">No network code in the binary. Audio lives in memory for a fifth of a second, becomes 56 numbers, and is gone. Nothing is recorded, nothing leaves the Mac.</p>
+      </article>
+      <article class="ft reveal">
+        <h3 data-i18n="ft.zones.t">Four zones, any shortcut</h3>
+        <p data-i18n="ft.zones.d">Each corner of the desk holds one binding — including combos macOS reserves for itself, like ⌃← and ⌘⇥.</p>
+      </article>
+      <article class="ft reveal">
+        <h3 data-i18n="ft.cal.t">Calibrates in a minute</h3>
+        <p data-i18n="ft.cal.d">Tap each zone 20–30 times, watch the accuracy number climb. Leave-one-out cross-validation, honestly reported.</p>
+      </article>
+      <article class="ft reveal">
+        <h3 data-i18n="ft.menubar.t">Menu bar only</h3>
+        <p data-i18n="ft.menubar.d">No Dock icon, no window in your way. A quiet status item that tells you the model's accuracy at a glance.</p>
+      </article>
+      <article class="ft reveal">
+        <h3 data-i18n="ft.signed.t">Signed and notarised</h3>
+        <p data-i18n="ft.signed.d">Developer ID signature, Apple notarisation, hardened runtime. Opens without a Gatekeeper warning.</p>
+      </article>
+      <article class="ft reveal">
+        <h3 data-i18n="ft.open.t">Open source</h3>
+        <p data-i18n="ft.open.d">Swift, no dependencies, every DSP decision documented in the code. Read it, build it, bend it.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ======================== screenshots ======================== -->
+  <section class="shots">
+    <div class="shot-main reveal">
+      <img src="assets/main.png" alt="Tap Spaces main window: four calibration zones around a laptop, sensitivity and shortcut settings" loading="lazy">
+    </div>
+    <div class="shot-side">
+      <img class="reveal" src="assets/toast.png" alt="Toast notification showing a fired shortcut" loading="lazy">
+      <p class="reveal" data-i18n="shots.caption">Calibration board, live confidence per zone, and the toast that confirms every fired shortcut.</p>
+    </div>
+  </section>
+
+  <!-- ========================== install ========================== -->
+  <section class="install" id="install">
+    <h2 class="reveal" data-i18n="in.title">Install</h2>
+    <div class="term reveal">
+      <div class="term-bar">
+        <span></span><span></span><span></span>
+        <button class="copy-btn" id="copyBtn" data-i18n="in.copy">Copy</button>
+      </div>
+      <pre><code><span class="c" data-i18n="in.c1"># add the tap and allow it</span>
+brew tap adilmustafayilmaz/tap
+brew trust adilmustafayilmaz/tap
+<span class="c" data-i18n="in.c2"># install</span>
+brew install --cask tap-spaces</code></pre>
+    </div>
+    <p class="install-note reveal" data-i18n="in.note">
+      Needs macOS 14 or newer. On first run the app walks you through its two
+      permissions: Microphone, to hear the taps, and Accessibility, to press
+      the keys. Already installed? <code>brew upgrade --cask tap-spaces</code>.
+    </p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div>
+    <img src="assets/icon.png" alt="" width="20" height="20">
+    <span>Tap Spaces <span id="verFoot">0.2.1</span></span>
+  </div>
+  <nav>
+    <a href="https://github.com/adilmustafayilmaz/Tap-Spaces" data-i18n="fo.source">Source</a>
+    <a href="https://github.com/adilmustafayilmaz/Tap-Spaces/releases" data-i18n="fo.releases">Releases</a>
+    <a href="https://github.com/adilmustafayilmaz/homebrew-tap" data-i18n="fo.tap">Homebrew tap</a>
+  </nav>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
