@@ -43,8 +43,8 @@ struct ContentView: View {
     private var board: some View {
         VStack(spacing: 10) {
             Picker("", selection: $state.mode) {
-                Text("Kalibrasyon").tag(Mode.calibrate)
-                Text("Canlı").tag(Mode.live)
+                Text(localised: "mode.calibrate").tag(Mode.calibrate)
+                Text(localised: "mode.live").tag(Mode.live)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -65,8 +65,8 @@ struct ContentView: View {
             .frame(height: 226)
 
             Text(state.mode == .calibrate
-                 ? "Bir bölge seç, sonra masanın o noktasına vur. Bölge başına 20–30 vuruş."
-                 : "Masaya vur — tahmin edilen bölge yanar ve kısayolu çalışır.")
+                 ? L("board.hint.calibrate")
+                 : L("board.hint.live"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -115,12 +115,12 @@ struct ContentView: View {
                 Text(zone.title).font(.system(size: 13, weight: .semibold))
 
                 if state.mode == .live && state.isReady {
-                    Text("%\(Int(score * 100))")
+                    Text(L("confidence.value", Int(score * 100)))
                         .font(.system(size: 11, design: .rounded))
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
                 } else if empty {
-                    Text("kalibre değil")
+                    Text(localised: "tile.uncalibrated")
                         .font(.system(size: 10.5))
                         .foregroundStyle(.orange)
                 }
@@ -158,11 +158,11 @@ struct ContentView: View {
 
     private var sensitivityLabel: String {
         switch state.sensitivity {
-        case ..<25: return "çok düşük"
-        case ..<45: return "düşük"
-        case ..<70: return "orta"
-        case ..<88: return "yüksek"
-        default: return "çok yüksek"
+        case ..<25: return L("sensitivity.veryLow")
+        case ..<45: return L("sensitivity.low")
+        case ..<70: return L("sensitivity.medium")
+        case ..<88: return L("sensitivity.high")
+        default: return L("sensitivity.veryHigh")
         }
     }
 
@@ -196,7 +196,7 @@ struct ContentView: View {
             Circle()
                 .fill(state.micDenied ? .red : .green)
                 .frame(width: 6, height: 6)
-            Text(state.micDenied ? "mikrofon izni yok" : "dinleniyor")
+            Text(state.micDenied ? L("status.micDenied") : L("status.listening"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -208,16 +208,16 @@ struct ContentView: View {
             if state.isReady && !state.canDiscriminate {
                 // A single trained zone always scores 100%; showing that as
                 // accuracy would be a lie.
-                Text("tek bölge — her vuruş buraya yazılır")
+                Text(localised: "status.singleZone")
                     .font(.system(size: 11))
                     .foregroundStyle(.orange)
             } else if let acc = state.accuracy {
-                Text("doğruluk %\(Int(acc * 100))")
+                Text(L("status.accuracy", Int(acc * 100)))
                     .font(.system(size: 11, weight: .medium, design: .rounded))
                     .monospacedDigit()
                     .foregroundStyle(acc > 0.8 ? .green : acc > 0.6 ? .orange : .red)
             }
-            Text("\(state.totalSamples) örnek")
+            Text(L("status.samples", state.totalSamples))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
@@ -235,15 +235,15 @@ struct ContentView: View {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundStyle(.orange)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Erişilebilirlik izni gerekli")
+                            Text(localised: "ax.required")
                                 .font(.system(size: 12.5, weight: .medium))
-                            Text("İzin olmadan tuşlar gönderilemez ve ⌃← gibi sistem kısayolları kaydedilemez.")
+                            Text(localised: "ax.explain")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
                             HStack {
-                                Button("Ayarları aç") { AXPermission.openSettings() }
-                                Button("Yeniden denetle") { state.refreshAccessibility() }
+                                Button(L("ax.openSettings")) { AXPermission.openSettings() }
+                                Button(L("ax.recheck")) { state.refreshAccessibility() }
                             }
                             .controlSize(.small)
                             .padding(.top, 2)
@@ -255,10 +255,10 @@ struct ContentView: View {
             // First section on purpose: these two decide whether a tap
             // registers at all and whether it is allowed to fire, so they are
             // the first thing to reach for when nothing seems to happen.
-            Section("Algılama") {
+            Section(L("section.detection")) {
                 VStack(alignment: .leading, spacing: 3) {
                     HStack {
-                        Text("Hassasiyet")
+                        Text(localised: "sensitivity.title")
                         Spacer()
                         Text(sensitivityLabel)
                             .font(.system(size: 11, design: .rounded))
@@ -266,30 +266,30 @@ struct ContentView: View {
                     }
                     Slider(value: $state.sensitivity, in: 0...100) { _ in state.save() }
                     HStack {
-                        Text("sert vuruş gerekir").font(.caption2).foregroundStyle(.tertiary)
+                        Text(localised: "sensitivity.hard").font(.caption2).foregroundStyle(.tertiary)
                         Spacer()
-                        Text("hafif vuruş yeter").font(.caption2).foregroundStyle(.tertiary)
+                        Text(localised: "sensitivity.light").font(.caption2).foregroundStyle(.tertiary)
                     }
                 }
                 .padding(.vertical, 2)
 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack {
-                        Text("En az güven")
+                        Text(localised: "confidence.title")
                         Spacer()
-                        Text("%\(Int(state.minConfidence * 100))")
+                        Text(L("confidence.value", Int(state.minConfidence * 100)))
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .monospacedDigit()
                             .foregroundStyle(.secondary)
                     }
                     Slider(value: $state.minConfidence, in: 0.25...0.95) { _ in state.save() }
-                    Text("Tahmin bu değerin altında kalırsa kısayol çalışmaz.")
+                    Text(localised: "confidence.hint")
                         .font(.caption2).foregroundStyle(.tertiary)
                 }
                 .padding(.vertical, 2)
             }
 
-            Section("Kısayollar") {
+            Section(L("section.shortcuts")) {
                 ForEach(Zone.allCases) { zone in
                     HStack {
                         Text(zone.title)
@@ -310,22 +310,22 @@ struct ContentView: View {
                         .foregroundStyle(.tertiary)
                         .disabled(state.bindings[zone] == nil)
                         .opacity(state.bindings[zone] == nil ? 0.25 : 1)
-                        .help("Bu bölgenin kısayolunu kaldır")
+                        .help(L("shortcut.removeHelp"))
                     }
                 }
 
                 HStack {
-                    Button("Varsayılanlara dön") { state.restoreDefaultBindings() }
+                    Button(L("shortcuts.restore")) { state.restoreDefaultBindings() }
                         .disabled(state.usingDefaultBindings)
-                    Button("Tümünü kaldır") { state.clearAllBindings() }
+                    Button(L("shortcuts.clearAll")) { state.clearAllBindings() }
                         .disabled(state.bindings.isEmpty)
                     Spacer()
                 }
                 .controlSize(.small)
             }
 
-            Section("Davranış") {
-                Toggle("Kısayolları çalıştır", isOn: $state.actionsEnabled)
+            Section(L("section.behaviour")) {
+                Toggle(L("toggle.runShortcuts"), isOn: $state.actionsEnabled)
                     .onChange(of: state.actionsEnabled) { _, on in
                         if on && !AXPermission.isTrusted { AXPermission.requestAccess() }
                         state.refreshAccessibility()
@@ -333,10 +333,10 @@ struct ContentView: View {
                     }
 
                 HStack {
-                    Toggle("Bildirim göster", isOn: $state.showToast)
+                    Toggle(L("toggle.showToast"), isOn: $state.showToast)
                         .onChange(of: state.showToast) { _, _ in state.save() }
                     Spacer()
-                    Button("Dene") {
+                    Button(L("button.try")) {
                         ToastPresenter.shared.show(
                             zone: state.armedZone.title,
                             shortcut: state.bindings[state.armedZone]?.display ?? "⌃←")
@@ -347,17 +347,17 @@ struct ContentView: View {
 
             }
 
-            Section("Kalibrasyon") {
+            Section(L("section.calibration")) {
                 HStack {
-                    Button("\(state.armedZone.title) bölgesini sil") { state.clear(state.armedZone) }
+                    Button(L("calibration.clearZone", state.armedZone.title)) { state.clear(state.armedZone) }
                         .disabled((state.counts[state.armedZone] ?? 0) == 0)
-                    Button("Tümünü sil", role: .destructive) { state.clear(nil) }
+                    Button(L("calibration.clearAll"), role: .destructive) { state.clear(nil) }
                         .disabled(state.totalSamples == 0)
                     Spacer()
                 }
                 .controlSize(.small)
 
-                Button("Tanıtımı tekrar göster") {
+                Button(L("calibration.showIntro")) {
                     state.hasOnboarded = false
                     state.save()
                 }

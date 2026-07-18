@@ -51,7 +51,7 @@ final class TapDetector {
         let format = input.inputFormat(forBus: 0)
         guard format.sampleRate > 0, format.channelCount > 0 else {
             throw NSError(domain: "TapSpaces", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Mikrofon girişi bulunamadı."
+                NSLocalizedDescriptionKey: L("error.noMicInput")
             ])
         }
 

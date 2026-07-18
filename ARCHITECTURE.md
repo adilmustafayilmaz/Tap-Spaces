@@ -7,7 +7,7 @@ klavye kombinasyonunu sisteme gönderir.
 
 ```bash
 ./build.sh --install     # /Applications içine kurar
-./build.sh               # sadece native/build/ içine derler
+./build.sh               # sadece build/ içine derler
 ```
 
 Sonra `TapSpaces.app`'i aç. Menü çubuğunda ✋ ikonu çıkar; Dock ikonu sadece

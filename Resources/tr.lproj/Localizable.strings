@@ -1,0 +1,130 @@
+/* Zones */
+"zone.topLeft"          = "Sol Üst";
+"zone.topRight"         = "Sağ Üst";
+"zone.bottomLeft"       = "Sol Alt";
+"zone.bottomRight"      = "Sağ Alt";
+
+/* Modes */
+"mode.calibrate"        = "Kalibrasyon";
+"mode.live"             = "Canlı";
+
+/* Board */
+"board.hint.calibrate"  = "Bir bölge seç, sonra masanın o noktasına vur. Bölge başına 20–30 vuruş.";
+"board.hint.live"       = "Masaya vur — tahmin edilen bölge yanar ve kısayolu çalışır.";
+"tile.uncalibrated"     = "kalibre değil";
+
+/* Status strip */
+"status.listening"      = "dinleniyor";
+"status.micDenied"      = "mikrofon izni yok";
+"status.singleZone"     = "tek bölge — her vuruş buraya yazılır";
+"status.accuracy"       = "doğruluk %%%d";
+"status.samples"        = "%d örnek";
+
+/* Sections */
+"section.detection"     = "Algılama";
+"section.shortcuts"     = "Kısayollar";
+"section.behaviour"     = "Davranış";
+"section.calibration"   = "Kalibrasyon";
+
+/* Sensitivity */
+"sensitivity.title"     = "Hassasiyet";
+"sensitivity.veryLow"   = "çok düşük";
+"sensitivity.low"       = "düşük";
+"sensitivity.medium"    = "orta";
+"sensitivity.high"      = "yüksek";
+"sensitivity.veryHigh"  = "çok yüksek";
+"sensitivity.hard"      = "sert vuruş gerekir";
+"sensitivity.light"     = "hafif vuruş yeter";
+
+/* Confidence */
+"confidence.title"      = "En az güven";
+"confidence.value"      = "%%%d";
+"confidence.hint"       = "Tahmin bu değerin altında kalırsa kısayol çalışmaz.";
+
+/* Accessibility permission */
+"ax.required"           = "Erişilebilirlik izni gerekli";
+"ax.explain"            = "İzin olmadan tuşlar gönderilemez ve ⌃← gibi sistem kısayolları kaydedilemez.";
+"ax.openSettings"       = "Ayarları aç";
+"ax.recheck"            = "Yeniden denetle";
+
+/* Shortcuts */
+"shortcut.assign"       = "Kısayol ata";
+"shortcut.recording"    = "tuşlara bas…";
+"shortcut.removeHelp"   = "Bu bölgenin kısayolunu kaldır";
+"shortcuts.restore"     = "Varsayılanlara dön";
+"shortcuts.clearAll"    = "Tümünü kaldır";
+
+/* Behaviour */
+"toggle.runShortcuts"   = "Kısayolları çalıştır";
+"toggle.showToast"      = "Bildirim göster";
+"button.try"            = "Dene";
+
+/* Calibration controls */
+"calibration.clearZone" = "%@ bölgesini sil";
+"calibration.clearAll"  = "Tümünü sil";
+"calibration.showIntro" = "Tanıtımı tekrar göster";
+
+/* Log */
+"log.trained"           = "kayıt → %@ (%d)";
+"log.untrained"         = "vuruş algılandı — model boş, önce kalibrasyon yap";
+"log.noAX"              = "%@ — Erişilebilirlik izni yok, tuş gönderilemedi";
+"log.fired"             = "%1$@ %%%2$d → %3$@";
+"log.lowConfidence"     = "%1$@ %%%2$d — güven düşük, atlandı";
+"log.predicted"         = "%1$@ — güven %%%2$d";
+"log.cleared"           = "temizlendi: %@";
+"log.all"               = "tümü";
+
+/* Menu bar */
+"menu.settings"         = "Kalibrasyon ve Ayarlar…";
+"menu.quit"             = "Tap Spaces'ten Çık";
+"menu.status.needCalibration" = "Kalibrasyon gerekli";
+"menu.status.shortcutsOff"    = "Kısayollar kapalı";
+"menu.status.active"          = "Etkin";
+"menu.status.activeAccuracy"  = "Etkin · doğruluk %%%d";
+
+/* Onboarding — shared */
+"onboarding.back"       = "Geri";
+"onboarding.continue"   = "Devam";
+"onboarding.start"      = "Kalibrasyona başla";
+"onboarding.beta"       = "BETA";
+
+/* Onboarding — welcome */
+"welcome.tagline"       = "MacBook'unun etrafındaki masaya vur. Hangi bölgeye vurduğunu duysun, o bölgeye atadığın klavye kısayolunu çalıştırsın.";
+"welcome.zones.title"   = "Masa dört bölgeye ayrılır";
+"welcome.zones.detail"  = "Laptopun etrafında sol üst, sağ üst, sol alt, sağ alt.";
+"welcome.mic.title"     = "Mikrofon vuruşu tanır";
+"welcome.mic.detail"    = "Her nokta masayı farklı titreştirir; uygulama bu farkı öğrenir.";
+"welcome.keys.title"    = "Kısayol çalışır";
+"welcome.keys.detail"   = "Bölge başına bir tuş kombinasyonu — istediğin gibi değiştirirsin.";
+"welcome.footnote1"     = "Kurulum iki izin ve birkaç dakikalık kalibrasyon sürer.";
+"welcome.footnote2"     = "Beta sürüm — masana ne kadar çok vuruş öğretirsen o kadar isabetli çalışır.";
+
+/* Onboarding — microphone */
+"mic.title"             = "Mikrofon izni";
+"mic.body"              = "Vuruşları duymak için gerekli. Ses hiçbir yere gönderilmez ve kaydedilmez — sadece vuruş anındaki 200 milisaniye analiz edilip atılır.";
+"mic.granted"           = "Mikrofon izni verildi";
+"mic.action"            = "İzin ver";
+
+/* Onboarding — accessibility */
+"axStep.title"          = "Erişilebilirlik izni";
+"axStep.body"           = "Tuş kombinasyonlarını göndermek için gerekli. ⌃← gibi sistemin kendine ayırdığı kısayolları kaydedebilmek için de şart.\n\nSistem Ayarları açılacak — listeden TapSpaces'i bul ve anahtarı aç.";
+"axStep.granted"        = "Erişilebilirlik izni verildi";
+"axStep.action"         = "Ayarları aç";
+
+/* Onboarding — calibration */
+"calStep.title"         = "Son adım: kalibrasyon";
+"calStep.body"          = "Uygulama masanı tanımıyor. Kullanmak istediğin her bölgeye vurarak öğretmen gerekiyor.";
+"calStep.1.title"       = "Bir bölge seç";
+"calStep.1.detail"      = "Izgarada bir kareye tıkla.";
+"calStep.2.title"       = "O noktaya en az 20–30 kez vur";
+"calStep.2.detail"      = "Ne kadar çok vurursan o kadar iyi ayırt eder. Sertliği ve tam noktayı biraz değiştir ki tek bir vuruşa ezberlemesin.";
+"calStep.3.title"       = "İstediğin kadar bölge ekle";
+"calStep.3.detail"      = "Dördünü birden doldurman şart değil — sadece sol taraf, hatta tek bölge de olur.";
+"calStep.4.title"       = "Canlı moda geç";
+"calStep.4.detail"      = "Artık vurunca kısayol çalışır.";
+"calStep.note.fewer"    = "Az bölge = daha kolay ayrım. İki bölge arasında seçim yapmak dörde göre çok daha isabetlidir.";
+"calStep.note.single"   = "Tek bölge kalibre edersen ayrım yapamaz: her vuruş o bölge sayılır.";
+"calStep.note.moved"    = "Laptop veya masa yer değiştirirse fingerprint bozulur, yeniden kalibre et.";
+
+/* Errors */
+"error.noMicInput"      = "Mikrofon girişi bulunamadı.";

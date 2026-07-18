@@ -95,32 +95,34 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         menu.addItem(status)
         menu.addItem(.separator())
 
-        menu.addItem(withTitle: "Kalibrasyon ve Ayarlar…",
+        menu.addItem(withTitle: L("menu.settings"),
                      action: #selector(showWindow), keyEquivalent: ",").target = self
 
-        let toggle = menu.addItem(withTitle: "Kısayolları çalıştır",
+        let toggle = menu.addItem(withTitle: L("toggle.runShortcuts"),
                                   action: #selector(toggleActions), keyEquivalent: "")
         toggle.target = self
         toggle.state = state.actionsEnabled ? .on : .off
 
-        let toast = menu.addItem(withTitle: "Bildirim göster",
+        let toast = menu.addItem(withTitle: L("toggle.showToast"),
                                  action: #selector(toggleToast), keyEquivalent: "")
         toast.target = self
         toast.state = state.showToast ? .on : .off
 
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Tap Spaces'ten Çık",
+        menu.addItem(withTitle: L("menu.quit"),
                      action: #selector(quit), keyEquivalent: "q").target = self
         statusItem.menu = menu
     }
 
     private func statusLine() -> String {
-        if state.micDenied { return "Mikrofon izni yok" }
-        if !state.isReady { return "Kalibrasyon gerekli" }
-        if !state.actionsEnabled { return "Kısayollar kapalı" }
-        if !state.accessibilityTrusted { return "Erişilebilirlik izni yok" }
-        let acc = state.accuracy.map { " · doğruluk %\(Int($0 * 100))" } ?? ""
-        return "Etkin\(acc)"
+        if state.micDenied { return L("status.micDenied") }
+        if !state.isReady { return L("menu.status.needCalibration") }
+        if !state.actionsEnabled { return L("menu.status.shortcutsOff") }
+        if !state.accessibilityTrusted { return L("ax.required") }
+        if let acc = state.accuracy {
+            return L("menu.status.activeAccuracy", Int(acc * 100))
+        }
+        return L("menu.status.active")
     }
 
     // ------------------------------------------------------------------
@@ -207,7 +209,7 @@ if CommandLine.arguments.contains("--toast-demo") {
     demo.setActivationPolicy(.accessory)
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
         MainActor.assumeIsolated {
-            ToastPresenter.shared.show(zone: "Sol Alt", shortcut: "⌃←", duration: 8)
+            ToastPresenter.shared.show(zone: Zone.bottomLeft.title, shortcut: "⌃←", duration: 8)
         }
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 10) { NSApp.terminate(nil) }

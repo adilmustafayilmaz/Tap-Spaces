@@ -188,12 +188,12 @@ final class AppState: ObservableObject {
             counts = model.counts()
             accuracy = model.crossValidate()
             lastZone = armedZone
-            append("kayıt → \(armedZone.title) (\(counts[armedZone] ?? 0))", armedZone)
+            append(L("log.trained", armedZone.title, counts[armedZone] ?? 0), armedZone)
             save()
 
         case .live:
             guard let (zone, scores) = model.predict(feats) else {
-                append("vuruş algılandı — model boş, önce kalibrasyon yap", .topLeft)
+                append(L("log.untrained"), .topLeft)
                 return
             }
             self.scores = scores
@@ -208,15 +208,15 @@ final class AppState: ObservableObject {
                     if showToast {
                         ToastPresenter.shared.show(zone: zone.title, shortcut: action.display)
                     }
-                    append("\(zone.title) %\(Int(confidence * 100)) → \(action.display)", zone)
+                    append(L("log.fired", zone.title, Int(confidence * 100), action.display), zone)
                 } else {
                     accessibilityTrusted = false
-                    append("\(zone.title) — Erişilebilirlik izni yok, tuş gönderilemedi", zone)
+                    append(L("log.noAX", zone.title), zone)
                 }
             } else if actionsEnabled, confidence < minConfidence {
-                append("\(zone.title) %\(Int(confidence * 100)) — güven düşük, atlandı", zone)
+                append(L("log.lowConfidence", zone.title, Int(confidence * 100)), zone)
             } else {
-                append("\(zone.title) — güven %\(Int(confidence * 100))", zone)
+                append(L("log.predicted", zone.title, Int(confidence * 100)), zone)
             }
         }
     }
@@ -235,7 +235,7 @@ final class AppState: ObservableObject {
         accuracy = model.crossValidate()
         scores = [:]
         save()
-        append("temizlendi: \(zone?.title ?? "tümü")", zone ?? .topLeft)
+        append(L("log.cleared", zone?.title ?? L("log.all")), zone ?? .topLeft)
     }
 
     var isReady: Bool { model.isReady }

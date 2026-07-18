@@ -25,6 +25,11 @@ mkdir -p "${OUT}/Contents/MacOS" "${OUT}/Contents/Resources"
 cp ".build/release/${APP_NAME}" "${OUT}/Contents/MacOS/${APP_NAME}"
 cp icon/AppIcon.icns "${OUT}/Contents/Resources/AppIcon.icns"
 
+# Localisation catalogues go straight into the bundle rather than through
+# SwiftPM resources, so NSLocalizedString resolves against the main bundle and
+# InfoPlist.strings can localise the microphone prompt.
+cp -R Resources/en.lproj Resources/tr.lproj "${OUT}/Contents/Resources/"
+
 cat > "${OUT}/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -40,6 +45,14 @@ cat > "${OUT}/Contents/Info.plist" <<PLIST
     <key>CFBundleShortVersionString</key><string>${VERSION}</string>
     <key>CFBundleVersion</key><string>${VERSION}</string>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
+    <!-- English is the development language; Turkish is offered alongside it.
+         macOS falls back to English for every other locale. -->
+    <key>CFBundleDevelopmentRegion</key><string>en</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>tr</string>
+    </array>
     <key>NSHighResolutionCapable</key><true/>
     <!-- Menu bar only: no Dock icon, no app switcher entry. -->
     <key>LSUIElement</key><true/>

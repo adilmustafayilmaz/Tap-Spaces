@@ -1,0 +1,130 @@
+/* Zones */
+"zone.topLeft"          = "Top Left";
+"zone.topRight"         = "Top Right";
+"zone.bottomLeft"       = "Bottom Left";
+"zone.bottomRight"      = "Bottom Right";
+
+/* Modes */
+"mode.calibrate"        = "Calibrate";
+"mode.live"             = "Live";
+
+/* Board */
+"board.hint.calibrate"  = "Pick a zone, then tap that spot on your desk. 20–30 taps per zone.";
+"board.hint.live"       = "Tap the desk — the predicted zone lights up and its shortcut runs.";
+"tile.uncalibrated"     = "not calibrated";
+
+/* Status strip */
+"status.listening"      = "listening";
+"status.micDenied"      = "no microphone access";
+"status.singleZone"     = "one zone — every tap counts as this";
+"status.accuracy"       = "accuracy %d%%";
+"status.samples"        = "%d samples";
+
+/* Sections */
+"section.detection"     = "Detection";
+"section.shortcuts"     = "Shortcuts";
+"section.behaviour"     = "Behaviour";
+"section.calibration"   = "Calibration";
+
+/* Sensitivity */
+"sensitivity.title"     = "Sensitivity";
+"sensitivity.veryLow"   = "very low";
+"sensitivity.low"       = "low";
+"sensitivity.medium"    = "medium";
+"sensitivity.high"      = "high";
+"sensitivity.veryHigh"  = "very high";
+"sensitivity.hard"      = "needs a firm tap";
+"sensitivity.light"     = "a light tap is enough";
+
+/* Confidence */
+"confidence.title"      = "Minimum confidence";
+"confidence.value"      = "%d%%";
+"confidence.hint"       = "Predictions below this will not run the shortcut.";
+
+/* Accessibility permission */
+"ax.required"           = "Accessibility permission required";
+"ax.explain"            = "Without it no keystrokes can be sent, and system shortcuts such as ⌃← cannot be recorded.";
+"ax.openSettings"       = "Open Settings";
+"ax.recheck"            = "Check again";
+
+/* Shortcuts */
+"shortcut.assign"       = "Set shortcut";
+"shortcut.recording"    = "press keys…";
+"shortcut.removeHelp"   = "Remove this zone's shortcut";
+"shortcuts.restore"     = "Restore defaults";
+"shortcuts.clearAll"    = "Remove all";
+
+/* Behaviour */
+"toggle.runShortcuts"   = "Run shortcuts";
+"toggle.showToast"      = "Show notification";
+"button.try"            = "Try";
+
+/* Calibration controls */
+"calibration.clearZone" = "Clear %@";
+"calibration.clearAll"  = "Clear all";
+"calibration.showIntro" = "Show introduction again";
+
+/* Log */
+"log.trained"           = "recorded → %@ (%d)";
+"log.untrained"         = "tap detected — model is empty, calibrate first";
+"log.noAX"              = "%@ — no accessibility permission, key not sent";
+"log.fired"             = "%1$@ %2$d%% → %3$@";
+"log.lowConfidence"     = "%1$@ %2$d%% — confidence too low, skipped";
+"log.predicted"         = "%1$@ — confidence %2$d%%";
+"log.cleared"           = "cleared: %@";
+"log.all"               = "all";
+
+/* Menu bar */
+"menu.settings"         = "Calibration and Settings…";
+"menu.quit"             = "Quit Tap Spaces";
+"menu.status.needCalibration" = "Calibration required";
+"menu.status.shortcutsOff"    = "Shortcuts off";
+"menu.status.active"          = "Active";
+"menu.status.activeAccuracy"  = "Active · accuracy %d%%";
+
+/* Onboarding — shared */
+"onboarding.back"       = "Back";
+"onboarding.continue"   = "Continue";
+"onboarding.start"      = "Start calibrating";
+"onboarding.beta"       = "BETA";
+
+/* Onboarding — welcome */
+"welcome.tagline"       = "Tap the desk around your MacBook. It works out which zone you hit, and runs the keyboard shortcut you bound to it.";
+"welcome.zones.title"   = "The desk splits into four zones";
+"welcome.zones.detail"  = "Top left, top right, bottom left and bottom right of the laptop.";
+"welcome.mic.title"     = "The microphone recognises the tap";
+"welcome.mic.detail"    = "Every spot rings the desk differently; the app learns the difference.";
+"welcome.keys.title"    = "A shortcut runs";
+"welcome.keys.detail"   = "One key combination per zone — change them however you like.";
+"welcome.footnote1"     = "Setup takes two permissions and a few minutes of calibration.";
+"welcome.footnote2"     = "Beta — the more taps you teach it, the more accurately it works.";
+
+/* Onboarding — microphone */
+"mic.title"             = "Microphone access";
+"mic.body"              = "Needed to hear the taps. Nothing is recorded or sent anywhere — only the 200 milliseconds around each tap are analysed and discarded.";
+"mic.granted"           = "Microphone access granted";
+"mic.action"            = "Grant access";
+
+/* Onboarding — accessibility */
+"axStep.title"          = "Accessibility access";
+"axStep.body"           = "Needed to send key combinations, and to record shortcuts the system reserves for itself such as ⌃←.\n\nSystem Settings will open — find TapSpaces in the list and turn it on.";
+"axStep.granted"        = "Accessibility access granted";
+"axStep.action"         = "Open Settings";
+
+/* Onboarding — calibration */
+"calStep.title"         = "Last step: calibration";
+"calStep.body"          = "The app does not know your desk yet. You teach it by tapping each zone you want to use.";
+"calStep.1.title"       = "Pick a zone";
+"calStep.1.detail"      = "Click a square in the grid.";
+"calStep.2.title"       = "Tap that spot at least 20–30 times";
+"calStep.2.detail"      = "The more you tap, the better it tells zones apart. Vary the force and the exact spot slightly so it does not memorise a single tap.";
+"calStep.3.title"       = "Add as many zones as you want";
+"calStep.3.detail"      = "You do not have to fill all four — just the left side, or even a single zone, works.";
+"calStep.4.title"       = "Switch to Live";
+"calStep.4.detail"      = "From then on, tapping runs the shortcut.";
+"calStep.note.fewer"    = "Fewer zones are easier to tell apart. Choosing between two is far more reliable than choosing between four.";
+"calStep.note.single"   = "With a single zone it cannot discriminate: every tap is counted as that zone.";
+"calStep.note.moved"    = "Move the laptop or the desk and the fingerprint breaks — recalibrate.";
+
+/* Errors */
+"error.noMicInput"      = "No microphone input found.";

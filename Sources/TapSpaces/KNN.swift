@@ -7,10 +7,10 @@ enum Zone: String, CaseIterable, Codable, Identifiable {
 
     var title: String {
         switch self {
-        case .topLeft: return "Sol Üst"
-        case .topRight: return "Sağ Üst"
-        case .bottomLeft: return "Sol Alt"
-        case .bottomRight: return "Sağ Alt"
+        case .topLeft: return L("zone.topLeft")
+        case .topRight: return L("zone.topRight")
+        case .bottomLeft: return L("zone.bottomLeft")
+        case .bottomRight: return L("zone.bottomRight")
         }
     }
 

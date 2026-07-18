@@ -55,7 +55,7 @@ struct OnboardingView: View {
             HStack(spacing: 9) {
                 Text("Tap Spaces")
                     .font(.system(size: 27, weight: .semibold))
-                Text("BETA")
+                Text(localised: "onboarding.beta")
                     .font(.system(size: 10, weight: .bold, design: .rounded))
                     .foregroundStyle(.orange)
                     .padding(.horizontal, 7)
@@ -65,7 +65,7 @@ struct OnboardingView: View {
             }
             .padding(.top, 22)
 
-            Text("MacBook'unun etrafındaki masaya vur. Hangi bölgeye vurduğunu duysun, o bölgeye atadığın klavye kısayolunu çalıştırsın.")
+            Text(localised: "welcome.tagline")
                 .font(.system(size: 13.5))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -73,18 +73,15 @@ struct OnboardingView: View {
                 .padding(.top, 10)
 
             VStack(alignment: .leading, spacing: 14) {
-                bullet("square.grid.2x2", "Masa dört bölgeye ayrılır",
-                       "Laptopun etrafında sol üst, sağ üst, sol alt, sağ alt.")
-                bullet("waveform", "Mikrofon vuruşu tanır",
-                       "Her nokta masayı farklı titreştirir; uygulama bu farkı öğrenir.")
-                bullet("keyboard", "Kısayol çalışır",
-                       "Bölge başına bir tuş kombinasyonu — istediğin gibi değiştirirsin.")
+                bullet("square.grid.2x2", L("welcome.zones.title"), L("welcome.zones.detail"))
+                bullet("waveform", L("welcome.mic.title"), L("welcome.mic.detail"))
+                bullet("keyboard", L("welcome.keys.title"), L("welcome.keys.detail"))
             }
             .padding(.top, 30)
 
             VStack(spacing: 5) {
-                Text("Kurulum iki izin ve birkaç dakikalık kalibrasyon sürer.")
-                Text("Beta sürüm — masana ne kadar çok vuruş öğretirsen o kadar isabetli çalışır.")
+                Text(localised: "welcome.footnote1")
+                Text(localised: "welcome.footnote2")
             }
             .font(.caption)
             .foregroundStyle(.tertiary)
@@ -98,11 +95,11 @@ struct OnboardingView: View {
         permissionStep(
             icon: "mic.fill",
             tint: .blue,
-            title: "Mikrofon izni",
-            body: "Vuruşları duymak için gerekli. Ses hiçbir yere gönderilmez ve kaydedilmez — sadece vuruş anındaki 200 milisaniye analiz edilip atılır.",
+            title: L("mic.title"),
+            body: L("mic.body"),
             granted: micGranted,
-            grantedText: "Mikrofon izni verildi",
-            action: "İzin ver"
+            grantedText: L("mic.granted"),
+            action: L("mic.action")
         ) {
             AVCaptureDevice.requestAccess(for: .audio) { ok in
                 Task { @MainActor in
@@ -117,11 +114,11 @@ struct OnboardingView: View {
         permissionStep(
             icon: "hand.raised.fill",
             tint: .orange,
-            title: "Erişilebilirlik izni",
-            body: "Tuş kombinasyonlarını göndermek için gerekli. ⌃← gibi sistemin kendine ayırdığı kısayolları kaydedebilmek için de şart.\n\nSistem Ayarları açılacak — listeden TapSpaces'i bul ve anahtarı aç.",
+            title: L("axStep.title"),
+            body: L("axStep.body"),
             granted: state.accessibilityTrusted,
-            grantedText: "Erişilebilirlik izni verildi",
-            action: "Ayarları aç"
+            grantedText: L("axStep.granted"),
+            action: L("axStep.action")
         ) {
             AXPermission.requestAccess()
             AXPermission.openSettings()
@@ -135,31 +132,26 @@ struct OnboardingView: View {
                 .foregroundStyle(.tint)
                 .padding(.bottom, 2)
 
-            Text("Son adım: kalibrasyon")
+            Text(localised: "calStep.title")
                 .font(.system(size: 20, weight: .semibold))
 
-            Text("Uygulama masanı tanımıyor. Kullanmak istediğin her bölgeye vurarak öğretmen gerekiyor.")
+            Text(localised: "calStep.body")
                 .font(.system(size: 13.5))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
             VStack(alignment: .leading, spacing: 13) {
-                numbered(1, "Bir bölge seç", "Izgarada bir kareye tıkla.")
-                numbered(2, "O noktaya en az 20–30 kez vur",
-                         "Ne kadar çok vurursan o kadar iyi ayırt eder. Sertliği ve tam noktayı biraz değiştir ki tek bir vuruşa ezberlemesin.")
-                numbered(3, "İstediğin kadar bölge ekle",
-                         "Dördünü birden doldurman şart değil — sadece sol taraf, hatta tek bölge de olur.")
-                numbered(4, "Canlı moda geç", "Artık vurunca kısayol çalışır.")
+                numbered(1, L("calStep.1.title"), L("calStep.1.detail"))
+                numbered(2, L("calStep.2.title"), L("calStep.2.detail"))
+                numbered(3, L("calStep.3.title"), L("calStep.3.detail"))
+                numbered(4, L("calStep.4.title"), L("calStep.4.detail"))
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Label("Az bölge = daha kolay ayrım. İki bölge arasında seçim yapmak dörde göre çok daha isabetlidir.",
-                      systemImage: "chart.bar.fill")
-                Label("Tek bölge kalibre edersen ayrım yapamaz: her vuruş o bölge sayılır.",
-                      systemImage: "exclamationmark.circle")
-                Label("Laptop veya masa yer değiştirirse fingerprint bozulur, yeniden kalibre et.",
-                      systemImage: "arrow.triangle.2.circlepath")
+                Label(L("calStep.note.fewer"), systemImage: "chart.bar.fill")
+                Label(L("calStep.note.single"), systemImage: "exclamationmark.circle")
+                Label(L("calStep.note.moved"), systemImage: "arrow.triangle.2.circlepath")
             }
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -242,9 +234,9 @@ struct OnboardingView: View {
                 Spacer()
 
                 if step > 0 {
-                    Button("Geri") { withAnimation { step -= 1 } }
+                    Button(L("onboarding.back")) { withAnimation { step -= 1 } }
                 }
-                Button(step == lastStep ? "Kalibrasyona başla" : "Devam") {
+                Button(step == lastStep ? L("onboarding.start") : L("onboarding.continue")) {
                     if step == lastStep {
                         state.hasOnboarded = true
                         state.mode = .calibrate

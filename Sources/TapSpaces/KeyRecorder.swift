@@ -5,7 +5,7 @@ import SwiftUI
 /// system-reserved combinations like ⌃← are recordable too.
 struct KeyRecorder: NSViewRepresentable {
     @Binding var action: KeyAction?
-    var placeholder: String = "Kısayol ata"
+    var placeholder: String = L("shortcut.assign")
 
     func makeNSView(context: Context) -> RecorderView {
         let view = RecorderView()
@@ -21,7 +21,7 @@ struct KeyRecorder: NSViewRepresentable {
 
     final class RecorderView: NSView {
         var action: KeyAction?
-        var placeholder = "Kısayol ata"
+        var placeholder = L("shortcut.assign")
         var onCapture: ((KeyAction?) -> Void)?
 
         private var recording = false { didSet { needsDisplay = true } }
@@ -57,7 +57,7 @@ struct KeyRecorder: NSViewRepresentable {
             path.lineWidth = recording ? 2 : 1
             path.stroke()
 
-            let text = recording ? "tuşlara bas…" : (action?.display ?? placeholder)
+            let text = recording ? L("shortcut.recording") : (action?.display ?? placeholder)
             let color: NSColor = recording ? .controlAccentColor
                 : (action == nil ? .tertiaryLabelColor : .labelColor)
             let str = NSAttributedString(string: text, attributes: [
