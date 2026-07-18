@@ -17,5 +17,15 @@ __pycache__/
 model.json
 state.json
 
+# Signing and notarisation secrets — never commit these
+*.p8
+*.p12
+*.cer
+*.certSigningRequest
+*.provisionprofile
+
 # macOS
 .DS_Store
+
+# Release artifacts
+native/dist/

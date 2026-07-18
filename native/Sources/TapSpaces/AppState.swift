@@ -19,7 +19,7 @@ final class AppState: ObservableObject {
     @Published var armedZone: Zone = .topLeft
     @Published var sensitivity: Double = 50 { didSet { detector.sensitivity = sensitivity } }
     @Published var minConfidence: Double = 0.6
-    @Published var actionsEnabled = false
+    @Published var actionsEnabled = true
     @Published var showToast = true
     @Published var bindings: [Zone: KeyAction] = [:]
     @Published var hasOnboarded = false
@@ -151,7 +151,10 @@ final class AppState: ObservableObject {
         // Shortcuts are armed but macOS does not trust us: show the system
         // prompt rather than only a passive warning in the panel, so the app
         // gets registered in the Accessibility list under the right identity.
-        if actionsEnabled && !accessibilityTrusted {
+        // Skipped during onboarding, which asks for this in its own step —
+        // shortcuts now default to on, so without this guard a first run would
+        // fire the prompt before the app has explained what it is for.
+        if hasOnboarded && actionsEnabled && !accessibilityTrusted {
             AXPermission.requestAccess()
         }
         AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
@@ -236,5 +239,7 @@ final class AppState: ObservableObject {
     }
 
     var isReady: Bool { model.isReady }
+    var canDiscriminate: Bool { model.canDiscriminate }
+    var trainedZoneCount: Int { model.trainedZoneCount }
     var totalSamples: Int { model.samples.count }
 }

@@ -6,6 +6,7 @@ cd "$(dirname "$0")"
 APP_NAME="TapSpaces"
 BUNDLE_ID="com.mustafa.tapspaces"
 OUT="build/${APP_NAME}.app"
+VERSION="$(cat VERSION)"
 
 echo "==> Derleniyor (release)"
 swift build -c release
@@ -36,8 +37,8 @@ cat > "${OUT}/Contents/Info.plist" <<PLIST
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>CFBundleIconName</key><string>AppIcon</string>
-    <key>CFBundleShortVersionString</key><string>1.0</string>
-    <key>CFBundleVersion</key><string>1</string>
+    <key>CFBundleShortVersionString</key><string>${VERSION}</string>
+    <key>CFBundleVersion</key><string>${VERSION}</string>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
     <key>NSHighResolutionCapable</key><true/>
     <!-- Menu bar only: no Dock icon, no app switcher entry. -->
@@ -48,9 +49,31 @@ cat > "${OUT}/Contents/Info.plist" <<PLIST
 </plist>
 PLIST
 
-echo "==> İmzalanıyor (ad-hoc)"
-codesign --force --sign - --identifier "${BUNDLE_ID}" "${OUT}"
-codesign --verify --verbose=1 "${OUT}" 2>&1 | sed 's/^/    /'
+# Prefer a Developer ID identity when one is installed: it is required for
+# notarisation, and it keeps the code signature stable across rebuilds, so the
+# Accessibility grant survives. Ad-hoc signing changes identity on every build
+# and silently invalidates that permission.
+if [[ -z "${SIGN_IDENTITY:-}" ]]; then
+    SIGN_IDENTITY=$(security find-identity -v -p codesigning \
+        | grep "Developer ID Application" \
+        | head -1 | sed -E 's/.*"(.*)"/\1/')
+fi
+
+if [[ -n "${SIGN_IDENTITY}" ]]; then
+    echo "==> İmzalanıyor: ${SIGN_IDENTITY}"
+    codesign --force --deep \
+        --sign "${SIGN_IDENTITY}" \
+        --identifier "${BUNDLE_ID}" \
+        --options runtime \
+        --entitlements TapSpaces.entitlements \
+        --timestamp \
+        "${OUT}"
+else
+    echo "==> Developer ID bulunamadı, ad-hoc imzalanıyor (dağıtıma uygun değil)"
+    codesign --force --sign - --identifier "${BUNDLE_ID}" "${OUT}"
+fi
+
+codesign --verify --strict --verbose=1 "${OUT}" 2>&1 | sed 's/^/    /'
 
 echo "==> Hazır: $(pwd)/${OUT}"
 

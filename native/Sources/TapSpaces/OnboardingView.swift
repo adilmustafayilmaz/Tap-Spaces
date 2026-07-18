@@ -52,9 +52,18 @@ struct OnboardingView: View {
         VStack(spacing: 0) {
             ZoneGlyph(side: 76)
 
-            Text("Tap Spaces")
-                .font(.system(size: 27, weight: .semibold))
-                .padding(.top, 22)
+            HStack(spacing: 9) {
+                Text("Tap Spaces")
+                    .font(.system(size: 27, weight: .semibold))
+                Text("BETA")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundStyle(.orange)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(.orange.opacity(0.16)))
+                    .offset(y: 2)
+            }
+            .padding(.top, 22)
 
             Text("MacBook'unun etrafındaki masaya vur. Hangi bölgeye vurduğunu duysun, o bölgeye atadığın klavye kısayolunu çalıştırsın.")
                 .font(.system(size: 13.5))
@@ -73,10 +82,15 @@ struct OnboardingView: View {
             }
             .padding(.top, 30)
 
-            Text("Kurulum iki izin ve birkaç dakikalık kalibrasyon sürer.")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .padding(.top, 26)
+            VStack(spacing: 5) {
+                Text("Kurulum iki izin ve birkaç dakikalık kalibrasyon sürer.")
+                Text("Beta sürüm — masana ne kadar çok vuruş öğretirsen o kadar isabetli çalışır.")
+            }
+            .font(.caption)
+            .foregroundStyle(.tertiary)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.top, 24)
         }
     }
 
@@ -124,7 +138,7 @@ struct OnboardingView: View {
             Text("Son adım: kalibrasyon")
                 .font(.system(size: 20, weight: .semibold))
 
-            Text("Uygulama masanı tanımıyor. Her bölgeye birkaç kez vurup öğretmen gerekiyor.")
+            Text("Uygulama masanı tanımıyor. Kullanmak istediğin her bölgeye vurarak öğretmen gerekiyor.")
                 .font(.system(size: 13.5))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -132,16 +146,25 @@ struct OnboardingView: View {
 
             VStack(alignment: .leading, spacing: 13) {
                 numbered(1, "Bir bölge seç", "Izgarada bir kareye tıkla.")
-                numbered(2, "O noktaya 20–30 kez vur", "Sertliği ve tam noktayı biraz değiştir.")
-                numbered(3, "Dört bölge için tekrarla", "Dördü de dolmadan doğruluk anlamlı olmaz.")
+                numbered(2, "O noktaya en az 20–30 kez vur",
+                         "Ne kadar çok vurursan o kadar iyi ayırt eder. Sertliği ve tam noktayı biraz değiştir ki tek bir vuruşa ezberlemesin.")
+                numbered(3, "İstediğin kadar bölge ekle",
+                         "Dördünü birden doldurman şart değil — sadece sol taraf, hatta tek bölge de olur.")
                 numbered(4, "Canlı moda geç", "Artık vurunca kısayol çalışır.")
             }
 
-            Label("Laptop veya masa yer değiştirirse yeniden kalibre et.",
-                  systemImage: "info.circle")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding(.top, 2)
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Az bölge = daha kolay ayrım. İki bölge arasında seçim yapmak dörde göre çok daha isabetlidir.",
+                      systemImage: "chart.bar.fill")
+                Label("Tek bölge kalibre edersen ayrım yapamaz: her vuruş o bölge sayılır.",
+                      systemImage: "exclamationmark.circle")
+                Label("Laptop veya masa yer değiştirirse fingerprint bozulur, yeniden kalibre et.",
+                      systemImage: "arrow.triangle.2.circlepath")
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .padding(.top, 4)
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 

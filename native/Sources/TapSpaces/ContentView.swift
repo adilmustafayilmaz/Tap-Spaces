@@ -80,9 +80,27 @@ struct ContentView: View {
         let count = state.counts[zone] ?? 0
         let empty = count == 0
 
+        let showFill = state.mode == .live && state.canDiscriminate
+
         return ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(hit ? Color.accentColor.opacity(0.22) : Color(nsColor: .controlBackgroundColor))
+                .fill(Color(nsColor: .controlBackgroundColor))
+
+            // The score as a level, filling from the bottom, so the four zones
+            // read as competing bars at a glance without parsing the numbers.
+            if showFill {
+                GeometryReader { geo in
+                    Rectangle()
+                        .fill(Color.accentColor.opacity(hit ? 0.42 : 0.26))
+                        .frame(height: geo.size.height * score)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .animation(.easeOut(duration: 0.28), value: score)
+            } else if hit {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.accentColor.opacity(0.22))
+            }
 
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .strokeBorder(
@@ -118,11 +136,13 @@ struct ContentView: View {
 
             VStack {
                 HStack {
-                    Spacer()
-                    Text("\(count)")
-                        .font(.system(size: 10, design: .rounded))
-                        .foregroundStyle(.tertiary)
-                        .monospacedDigit()
+                    if zone.isLeft {
+                        sampleBadge(count)
+                        Spacer()
+                    } else {
+                        Spacer()
+                        sampleBadge(count)
+                    }
                 }
                 Spacer()
             }
@@ -134,6 +154,23 @@ struct ContentView: View {
             state.mode = .calibrate
         }
         .animation(.easeOut(duration: 0.16), value: hit)
+    }
+
+    private var sensitivityLabel: String {
+        switch state.sensitivity {
+        case ..<25: return "çok düşük"
+        case ..<45: return "düşük"
+        case ..<70: return "orta"
+        case ..<88: return "yüksek"
+        default: return "çok yüksek"
+        }
+    }
+
+    private func sampleBadge(_ count: Int) -> some View {
+        Text("\(count)")
+            .font(.system(size: 10, design: .rounded))
+            .foregroundStyle(.tertiary)
+            .monospacedDigit()
     }
 
     private var laptop: some View {
@@ -168,7 +205,13 @@ struct ContentView: View {
 
             Spacer()
 
-            if let acc = state.accuracy {
+            if state.isReady && !state.canDiscriminate {
+                // A single trained zone always scores 100%; showing that as
+                // accuracy would be a lie.
+                Text("tek bölge — her vuruş buraya yazılır")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.orange)
+            } else if let acc = state.accuracy {
                 Text("doğruluk %\(Int(acc * 100))")
                     .font(.system(size: 11, weight: .medium, design: .rounded))
                     .monospacedDigit()
@@ -207,6 +250,43 @@ struct ContentView: View {
                         }
                     }
                 }
+            }
+
+            // First section on purpose: these two decide whether a tap
+            // registers at all and whether it is allowed to fire, so they are
+            // the first thing to reach for when nothing seems to happen.
+            Section("Algılama") {
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack {
+                        Text("Hassasiyet")
+                        Spacer()
+                        Text(sensitivityLabel)
+                            .font(.system(size: 11, design: .rounded))
+                            .foregroundStyle(.secondary)
+                    }
+                    Slider(value: $state.sensitivity, in: 0...100) { _ in state.save() }
+                    HStack {
+                        Text("sert vuruş gerekir").font(.caption2).foregroundStyle(.tertiary)
+                        Spacer()
+                        Text("hafif vuruş yeter").font(.caption2).foregroundStyle(.tertiary)
+                    }
+                }
+                .padding(.vertical, 2)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack {
+                        Text("En az güven")
+                        Spacer()
+                        Text("%\(Int(state.minConfidence * 100))")
+                            .font(.system(size: 11, weight: .medium, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+                    Slider(value: $state.minConfidence, in: 0.25...0.95) { _ in state.save() }
+                    Text("Tahmin bu değerin altında kalırsa kısayol çalışmaz.")
+                        .font(.caption2).foregroundStyle(.tertiary)
+                }
+                .padding(.vertical, 2)
             }
 
             Section("Kısayollar") {
@@ -265,32 +345,6 @@ struct ContentView: View {
                     .disabled(!state.showToast)
                 }
 
-                LabeledContent("Hassasiyet") {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Slider(value: $state.sensitivity, in: 0...100) { _ in state.save() }
-                        HStack {
-                            Text("sert").font(.caption2).foregroundStyle(.tertiary)
-                            Spacer()
-                            Text("hafif").font(.caption2).foregroundStyle(.tertiary)
-                        }
-                    }
-                    .frame(width: 190)
-                }
-
-                LabeledContent {
-                    HStack(spacing: 8) {
-                        Slider(value: $state.minConfidence, in: 0.25...0.95) { _ in state.save() }
-                            .frame(width: 150)
-                        Text("%\(Int(state.minConfidence * 100))")
-                            .font(.system(size: 11, design: .rounded))
-                            .monospacedDigit()
-                            .foregroundStyle(.secondary)
-                            .frame(width: 32, alignment: .trailing)
-                    }
-                } label: {
-                    Text("En az güven")
-                    Text("Bunun altındaki tahminler kısayolu tetiklemez.")
-                }
             }
 
             Section("Kalibrasyon") {

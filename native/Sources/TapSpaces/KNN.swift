@@ -13,6 +13,10 @@ enum Zone: String, CaseIterable, Codable, Identifiable {
         case .bottomRight: return "Sağ Alt"
         }
     }
+
+    /// Drives which outer corner a tile's badge sits in, so the counts hug the
+    /// edges of the board instead of crowding the divider down the middle.
+    var isLeft: Bool { self == .topLeft || self == .bottomLeft }
 }
 
 struct TrainingSample: Codable {
@@ -61,10 +65,15 @@ final class KNN: Codable {
         return c
     }
 
-    /// Enough data in enough zones for a prediction to mean anything.
-    var isReady: Bool {
-        counts().values.filter { $0 >= 3 }.count >= 2
-    }
+    /// Zones with enough samples to take part in a prediction.
+    var trainedZoneCount: Int { counts().values.filter { $0 >= 3 }.count }
+
+    /// One trained zone is a legitimate setup — it turns any tap into a single
+    /// trigger. It just cannot discriminate, so every tap scores 100% for that
+    /// zone; the UI calls that out rather than pretending it is accuracy.
+    var isReady: Bool { trainedZoneCount >= 1 }
+
+    var canDiscriminate: Bool { trainedZoneCount >= 2 }
 
     private func fit() {
         guard dirty, !samples.isEmpty else { return }
