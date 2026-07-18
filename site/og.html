@@ -1,0 +1,113 @@
+<!doctype html>
+<!-- Social preview card, rendered to assets/og.png by headless Chrome.
+     Not linked from the site. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    width: 1280px; height: 640px; overflow: hidden;
+    background:
+      radial-gradient(90% 120% at 78% 40%, rgba(226 189 119 / 0.07), transparent 60%),
+      radial-gradient(1.5px 1.5px at center, rgba(236 231 220 / 0.11) 1px, transparent 1.5px) 0 0 / 34px 34px,
+      #0c0b09;
+    color: #ece7dc;
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    display: flex; align-items: center;
+    padding: 0 84px;
+    gap: 70px;
+  }
+  .left { flex: 1.25; }
+  .brand { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+  .brand img { width: 52px; height: 52px; border-radius: 12px; }
+  .brand span { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+  h1 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 900;
+    font-size: 55px;
+    line-height: 1.16;
+    letter-spacing: -0.01em;
+  }
+  h1 .grad {
+    background: linear-gradient(100deg, #e2bd77, #a97e34);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub { margin-top: 26px; font-size: 21px; color: #a39b8a; line-height: 1.5; }
+  .chips { display: flex; gap: 10px; margin-top: 34px; }
+  .chip {
+    font-size: 15px; font-weight: 600; color: #c9c2b2;
+    border: 1px solid #2a2519; border-radius: 999px; padding: 9px 18px;
+  }
+
+  .desk {
+    position: relative;
+    width: 400px; height: 400px;
+    border-radius: 22px;
+    border: 1px solid rgba(255 240 210 / 0.1);
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(255 206 158 / 0.16), transparent 55%),
+      repeating-linear-gradient(178.6deg,
+        #26180f 0px 13px, #332214 13px 16px, #26180f 16px 31px,
+        #1c110a 31px 47px, #332214 47px 50px, #26180f 50px 68px);
+    box-shadow: 0 40px 90px -30px rgba(0 0 0 / 0.85);
+    flex-shrink: 0;
+  }
+  .zones {
+    position: absolute; inset: 13px;
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 11px;
+  }
+  .z {
+    border: 2px dashed rgba(255 255 255 / 0.18);
+    border-radius: 13px;
+  }
+  .z.lit {
+    border-style: solid;
+    border-color: #e2bd77;
+    background: rgba(226 189 119 / 0.14);
+  }
+  .ring {
+    position: absolute;
+    border: 2.5px solid rgba(255 245 225 / 0.75);
+    border-radius: 50%;
+  }
+  .r1 { width: 60px; height: 60px; left: 78px; bottom: 72px; }
+  .r2 { width: 116px; height: 116px; left: 50px; bottom: 44px; border-color: rgba(226 189 119 / 0.55); }
+  .r3 { width: 176px; height: 176px; left: 20px; bottom: 14px; border-color: rgba(169 126 52 / 0.4); }
+  .toast {
+    position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(20 18 14 / 0.9);
+    border: 1px solid rgba(255 255 255 / 0.14);
+    border-radius: 999px;
+    padding: 12px 20px;
+    font-size: 16px; font-weight: 600; white-space: nowrap;
+    box-shadow: 0 14px 40px rgba(0 0 0 / 0.6);
+  }
+  .toast kbd {
+    font-family: ui-monospace, Menlo, monospace; font-size: 14px;
+    background: rgba(255 255 255 / 0.1); border: 1px solid rgba(255 255 255 / 0.15);
+    border-radius: 7px; padding: 3px 9px;
+  }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="brand"><img src="assets/icon.png" alt=""><span>Tap Spaces</span></div>
+    <h1>Your desk just<br><span class="grad">became a keyboard.</span></h1>
+    <p class="sub">Knock on the desk — the Mac hears where, and fires your shortcut.<br>On-device, offline, open source.</p>
+    <div class="chips"><span class="chip">macOS 14+</span><span class="chip">Homebrew</span><span class="chip">MIT</span></div>
+  </div>
+  <div class="desk">
+    <div class="zones">
+      <div class="z"></div><div class="z"></div>
+      <div class="z lit"></div><div class="z"></div>
+    </div>
+    <i class="ring r1"></i><i class="ring r2"></i><i class="ring r3"></i>
+    <div class="toast">Bottom left <kbd>⌃←</kbd></div>
+  </div>
+</body>
+</html>

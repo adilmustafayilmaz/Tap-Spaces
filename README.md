@@ -9,9 +9,14 @@
 No extra hardware. No sensors. Just the microphone that is already there.
 
 <img src="https://img.shields.io/badge/macOS-14%2B-000000?style=flat-square" alt="macOS 14+">
-<img src="https://img.shields.io/badge/version-0.1.0%20beta-orange?style=flat-square" alt="0.1.0 beta">
+<img src="https://img.shields.io/github/v/release/adilmustafayilmaz/Tap-Spaces?style=flat-square&label=version&color=orange" alt="Latest release">
 <img src="https://img.shields.io/badge/signed-Developer%20ID-blue?style=flat-square" alt="Signed">
 <img src="https://img.shields.io/badge/notarised-Apple-blue?style=flat-square" alt="Notarised">
+<img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT licensed">
+
+<br>
+
+**[Website](https://adilmustafayilmaz.github.io/Tap-Spaces/)** · [Releases](https://github.com/adilmustafayilmaz/Tap-Spaces/releases)
 
 <br><br>
 
@@ -169,3 +174,9 @@ profile, never from the command line or this repository.
 
 [ARCHITECTURE.md](ARCHITECTURE.md) covers the source layout, the permission
 model and why rebuilding used to break the Accessibility grant.
+
+---
+
+## License
+
+[MIT](LICENSE). Fork it, ship it, bend it — a copyright line is all it asks.
