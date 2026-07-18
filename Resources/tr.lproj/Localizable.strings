@@ -58,6 +58,8 @@
 "toggle.runShortcuts"   = "Kısayolları çalıştır";
 "toggle.showToast"      = "Bildirim göster";
 "button.try"            = "Dene";
+"language.title"        = "Dil";
+"language.system"       = "Sistem dili";
 
 /* Calibration controls */
 "calibration.clearZone" = "%@ bölgesini sil";

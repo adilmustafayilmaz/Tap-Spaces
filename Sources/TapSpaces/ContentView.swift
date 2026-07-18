@@ -345,6 +345,12 @@ struct ContentView: View {
                     .disabled(!state.showToast)
                 }
 
+                Picker(L("language.title"), selection: $state.language) {
+                    ForEach(AppLanguage.allCases, id: \.self) { lang in
+                        Text(lang.title).tag(lang)
+                    }
+                }
+                .onChange(of: state.language) { _, _ in state.save() }
             }
 
             Section(L("section.calibration")) {

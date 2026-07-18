@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 /// Menu bar app. The activation policy stays `.accessory` for the whole
@@ -10,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var window: NSWindow!
     private let state = AppState()
     private var observer: NSObjectProtocol?
+    private var langSub: AnyCancellable?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -43,6 +45,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         ) { [weak self] _ in
             Task { @MainActor in self?.state.refreshAccessibility() }
         }
+
+        // SwiftUI re-renders on its own when the language changes; the menu
+        // bar is AppKit and has to be rebuilt by hand. The main-queue hop
+        // runs after AppState's didSet has already re-pointed L10n.
+        langSub = state.$language
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.rebuildMenu() }
     }
 
     // ------------------------------------------------------------------

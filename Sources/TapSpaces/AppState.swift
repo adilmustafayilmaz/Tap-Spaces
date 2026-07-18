@@ -23,6 +23,7 @@ final class AppState: ObservableObject {
     @Published var showToast = true
     @Published var bindings: [Zone: KeyAction] = [:]
     @Published var hasOnboarded = false
+    @Published var language: AppLanguage = .system { didSet { L10n.apply(language) } }
 
     /// Sent to the frontmost app when a zone is hit, unless the user rebinds or
     /// clears them. Chosen to be reversible and non-destructive: Mission
@@ -62,6 +63,7 @@ final class AppState: ObservableObject {
         /// throw away the user's calibration.
         var showToast: Bool?
         var hasOnboarded: Bool?
+        var language: String?
     }
 
     /// True when nothing has ever been saved — used to decide whether to seed
@@ -123,6 +125,7 @@ final class AppState: ObservableObject {
         // Anyone upgrading from a build that predates onboarding has already
         // set the app up by hand; don't drag them back through the intro.
         hasOnboarded = p.hasOnboarded ?? true
+        language = p.language.flatMap(AppLanguage.init(rawValue:)) ?? .system
     }
 
     /// Put every zone back on its default shortcut.
@@ -144,7 +147,8 @@ final class AppState: ObservableObject {
         for (zone, action) in bindings { encoded[zone.rawValue] = action }
         let p = Persisted(model: model, bindings: encoded, sensitivity: sensitivity,
                           minConfidence: minConfidence, actionsEnabled: actionsEnabled,
-                          showToast: showToast, hasOnboarded: hasOnboarded)
+                          showToast: showToast, hasOnboarded: hasOnboarded,
+                          language: language == .system ? nil : language.rawValue)
         if let data = try? JSONEncoder().encode(p) {
             try? data.write(to: Self.storeURL, options: .atomic)
         }

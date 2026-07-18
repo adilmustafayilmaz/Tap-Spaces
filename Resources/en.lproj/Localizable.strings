@@ -58,6 +58,8 @@
 "toggle.runShortcuts"   = "Run shortcuts";
 "toggle.showToast"      = "Show notification";
 "button.try"            = "Try";
+"language.title"        = "Language";
+"language.system"       = "System default";
 
 /* Calibration controls */
 "calibration.clearZone" = "Clear %@";
