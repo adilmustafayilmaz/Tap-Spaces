@@ -60,6 +60,7 @@
 "button.try"            = "Try";
 "language.title"        = "Language";
 "language.system"       = "System default";
+"menu.updateAvailable"  = "Update available: %@…";
 
 /* Calibration controls */
 "calibration.clearZone" = "Clear %@";

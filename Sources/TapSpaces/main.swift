@@ -10,8 +10,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var statusItem: NSStatusItem!
     private var window: NSWindow!
     private let state = AppState()
+    private let updater = UpdateChecker()
     private var observer: NSObjectProtocol?
     private var langSub: AnyCancellable?
+    private var updateSub: AnyCancellable?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -50,6 +52,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         // bar is AppKit and has to be rebuilt by hand. The main-queue hop
         // runs after AppState's didSet has already re-pointed L10n.
         langSub = state.$language
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.rebuildMenu() }
+
+        updater.start()
+        updateSub = updater.$availableVersion
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.rebuildMenu() }
     }
@@ -103,6 +110,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         status.isEnabled = false
         menu.addItem(status)
         menu.addItem(.separator())
+
+        if let version = updater.availableVersion {
+            menu.addItem(withTitle: L("menu.updateAvailable", version),
+                         action: #selector(openReleases), keyEquivalent: "").target = self
+            menu.addItem(.separator())
+        }
 
         menu.addItem(withTitle: L("menu.settings"),
                      action: #selector(showWindow), keyEquivalent: ",").target = self
@@ -178,6 +191,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         rebuildMenu()
     }
 
+    @objc private func openReleases() {
+        UpdateChecker.open()
+    }
+
     @objc private func quit() {
         state.stop()
         NSApp.terminate(nil)
@@ -208,6 +225,28 @@ extension AppDelegate: NSMenuDelegate {
 
 if CommandLine.arguments.contains("--selftest") {
     exit(SelfTest.run())
+}
+
+// Headless probe for the update check: fetches the latest release tag,
+// compares it with the bundle version and prints the verdict.
+if CommandLine.arguments.contains("--check-update") {
+    let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
+    let api = URL(string: "https://api.github.com/repos/adilmustafayilmaz/Tap-Spaces/releases/latest")!
+    let semaphore = DispatchSemaphore(value: 0)
+    URLSession.shared.dataTask(with: api) { data, _, error in
+        defer { semaphore.signal() }
+        guard let data,
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let tag = object["tag_name"] as? String else {
+            print("fetch failed: \(error?.localizedDescription ?? "bad response")")
+            return
+        }
+        let latest = tag.hasPrefix("v") ? String(tag.dropFirst()) : tag
+        print("current \(current), latest \(latest) → "
+              + (UpdateChecker.isNewer(latest, than: current) ? "UPDATE AVAILABLE" : "up to date"))
+    }.resume()
+    semaphore.wait()
+    exit(0)
 }
 
 // Renders one toast and quits — lets the notification be inspected without

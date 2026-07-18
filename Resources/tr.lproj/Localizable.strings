@@ -60,6 +60,7 @@
 "button.try"            = "Dene";
 "language.title"        = "Dil";
 "language.system"       = "Sistem dili";
+"menu.updateAvailable"  = "Güncelleme var: %@…";
 
 /* Calibration controls */
 "calibration.clearZone" = "%@ bölgesini sil";

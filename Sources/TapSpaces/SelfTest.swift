@@ -123,7 +123,15 @@ enum SelfTest {
         check("hostile load rejected", hostile.samples.isEmpty && hostile.k >= 1,
               "\(hostile.samples.count) kept, k=\(hostile.k)")
 
-        // 6. Key action formatting and codability
+        // 6. Version comparison for the update check
+        check("version compare",
+              UpdateChecker.isNewer("0.3.1", than: "0.3.0")
+              && UpdateChecker.isNewer("1.0", than: "0.9.9")
+              && !UpdateChecker.isNewer("0.3.0", than: "0.3.0")
+              && !UpdateChecker.isNewer("0.2.9", than: "0.3.0"),
+              "ordering holds")
+
+        // 7. Key action formatting and codability
         let action = KeyAction(keyCode: 123, modifiers: 262144)   // ⌃←
         check("key display", action.display.contains("←"), action.display)
         let ka = try! JSONDecoder().decode(
