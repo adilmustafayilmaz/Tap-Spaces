@@ -16,28 +16,33 @@
     font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     color: #ece7dc;
   }
+  /* Top-right: the default Finder grid drops (normally hidden) items into the
+     top-left corner, and users who show hidden files would cover a centred
+     wordmark with them. */
   .wordmark {
-    position: absolute; top: 34px; left: 0; right: 0;
-    text-align: center;
+    position: absolute; top: 34px; right: 40px;
+    text-align: right;
     font-size: 13px; font-weight: 700;
-    letter-spacing: 0.34em; text-indent: 0.34em;
+    letter-spacing: 0.34em;
     color: #a39b8a;
     text-transform: uppercase;
   }
-  /* tap ripples around the app icon slot at (165,195) */
+  /* Tap ripples around the app icon slot. Finder is told to put the icon at
+     (165,195) but actually renders its centre ~34pt lower, so the artwork is
+     drawn around (165,229) to line up with what the user sees. */
   .ring { position: absolute; border-radius: 50%; border: 1.5px solid; }
-  .r1 { width: 150px; height: 150px; left: 90px;  top: 120px; border-color: rgba(226 189 119 / 0.34); }
-  .r2 { width: 210px; height: 210px; left: 60px;  top: 90px;  border-color: rgba(226 189 119 / 0.18); }
-  .r3 { width: 270px; height: 270px; left: 30px;  top: 60px;  border-color: rgba(226 189 119 / 0.09); }
+  .r1 { width: 150px; height: 150px; left: 90px;  top: 154px; border-color: rgba(226 189 119 / 0.34); }
+  .r2 { width: 210px; height: 210px; left: 60px;  top: 124px; border-color: rgba(226 189 119 / 0.18); }
+  .r3 { width: 270px; height: 270px; left: 30px;  top: 94px;  border-color: rgba(226 189 119 / 0.09); }
   /* soft halo behind the Applications slot */
   .halo {
-    position: absolute; width: 170px; height: 170px; left: 410px; top: 110px;
+    position: absolute; width: 170px; height: 170px; left: 410px; top: 144px;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(236 231 220 / 0.05), transparent 65%);
   }
   .arrow {
-    position: absolute; left: 262px; top: 183px;
-    width: 136px; height: 24px;
+    position: absolute; left: 262px; top: 217px;
+    width: 172px; height: 24px;
   }
   .caption {
     position: absolute; bottom: 42px; left: 0; right: 0;
@@ -54,15 +59,15 @@
   <p class="wordmark">Tap Spaces</p>
   <i class="ring r1"></i><i class="ring r2"></i><i class="ring r3"></i>
   <i class="halo"></i>
-  <svg class="arrow" viewBox="0 0 136 24" fill="none">
+  <svg class="arrow" viewBox="0 0 172 24" fill="none">
     <defs>
-      <linearGradient id="g" x1="0" y1="0" x2="136" y2="0" gradientUnits="userSpaceOnUse">
+      <linearGradient id="g" x1="0" y1="0" x2="172" y2="0" gradientUnits="userSpaceOnUse">
         <stop offset="0" stop-color="#e2bd77" stop-opacity="0.35"/>
         <stop offset="1" stop-color="#e2bd77"/>
       </linearGradient>
     </defs>
-    <path d="M2 12h118" stroke="url(#g)" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M112 3l18 9-18 9" stroke="#e2bd77" stroke-width="2.5"
+    <path d="M2 12h154" stroke="url(#g)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M148 3l18 9-18 9" stroke="#e2bd77" stroke-width="2.5"
           stroke-linecap="round" stroke-linejoin="round" fill="none"/>
   </svg>
   <p class="caption">
